@@ -21,10 +21,6 @@ class OnlyAdminThemeSwitcher implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    if ($route_match->getRouteName() == 'user.login') {
-      return 'seven';
-    }
-
-    return NULL;
+    return 'seven';
   }
 }

@@ -1,10 +1,15 @@
 services:
-  asti.event_subscriber:
+  only_admin.route_subscriber:
+    class: Drupal\only_admin\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+
+  only_admin.event_subscriber:
     class: Drupal\only_admin\EventSubscriber\OnlyAdminSubscriber
     tags:
       - { name: event_subscriber }
     arguments:
-      ['@current_user']
+      ['@current_user', '@current_route_match']
 
   theme.only_admin.switcher:
     class: Drupal\only_admin\OnlyAdminThemeSwitcher

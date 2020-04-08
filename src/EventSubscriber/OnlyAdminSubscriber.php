@@ -2,20 +2,61 @@
 
 namespace Drupal\only_admin\EventSubscriber;
 
-use Drupal\asti\Utility\Asti;
-use Drupal\Core\Path\PathMatcher;
+use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 class OnlyAdminSubscriber implements EventSubscriberInterface {
 
   /**
+   * The current account.
+   *
    * @var \Drupal\Core\Session\AccountInterface
    */
   protected $account;
 
-  public function __construct(AccountInterface $account) {
+  /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\CurrentRouteMatch
+   */
+  protected $currentRouteMatch;
+
+  public function __construct(AccountInterface $account, CurrentRouteMatch $currentRouteMatch) {
     $this->account = $account;
+    $this->currentRouteMatch = $currentRouteMatch;
   }
+
+  /**
+   * Kernel response event handler.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   *   Response event.
+   */
+  public function onKernelResponse(FilterResponseEvent $event) {
+    // Skip if user authenticated.
+    if ($this->account->isAuthenticated()) {
+      return;
+    }
+    // Skip if current route user login.
+    if ($this->currentRouteMatch->getRouteName() === 'user.login') {
+      return;
+    }
+
+    $event->setResponse(new RedirectResponse(Url::fromRoute('user.login')->toString()));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getSubscribedEvents() {
+    return [
+      KernelEvents::RESPONSE => ['onKernelResponse'],
+    ];
+  }
+
 }
