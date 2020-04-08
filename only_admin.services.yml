@@ -1,0 +1,12 @@
+services:
+  asti.event_subscriber:
+    class: Drupal\only_admin\EventSubscriber\OnlyAdminSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments:
+      ['@current_user']
+
+  theme.only_admin.switcher:
+    class: Drupal\only_admin\OnlyAdminThemeSwitcher
+    tags:
+      - { name: theme_negotiator, priority: 100 }

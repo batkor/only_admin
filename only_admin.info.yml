@@ -1,0 +1,6 @@
+name: 'Only admin'
+description: 'This module redirect anonymous user to login page and change theme.'
+package: Custom
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
