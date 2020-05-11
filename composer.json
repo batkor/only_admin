@@ -1,0 +1,12 @@
+{
+  "name": "batkor/only_admin",
+  "type": "drupal-custom-module",
+  "description": "Access only admin.",
+  "keywords": ["Drupal"],
+  "homepage": "https://gitlab.com/batkor-modules/only_admin",
+  "authors": [
+    {
+      "name": "batkor"
+    }
+  ]
+}
