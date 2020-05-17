@@ -5,6 +5,9 @@ namespace Drupal\only_admin\Routing;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * Override routes.
+ */
 class RouteSubscriber extends RouteSubscriberBase {
 
   /**

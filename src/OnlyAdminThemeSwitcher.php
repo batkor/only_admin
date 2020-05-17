@@ -44,4 +44,5 @@ class OnlyAdminThemeSwitcher implements ThemeNegotiatorInterface {
       ->get('system.theme');
     return $config->get('admin') ?? $config->get('default') ?? 'seven';
   }
+
 }

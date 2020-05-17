@@ -43,7 +43,14 @@ class OnlyAdminSubscriber implements EventSubscriberInterface {
       return;
     }
     // Skip if current route user login.
-    $allowed_routes = ['user.login', 'user.reset', 'user.logout'];
+    $allowed_routes = [
+      'user.login',
+      'user.reset',
+      'user.logout',
+      'user.login.http',
+      'user.login_status.http',
+    ];
+
     if (in_array($this->currentRouteMatch->getRouteName(), $allowed_routes)) {
       return;
     }
