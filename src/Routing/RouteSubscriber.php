@@ -15,7 +15,7 @@ class RouteSubscriber extends RouteSubscriberBase {
    */
   protected function alterRoutes(RouteCollection $collection) {
     if ($route = $collection->get('user.pass')) {
-      $route->setRequirement('_access', 'FALSE');
+      $route->setRequirement('_user_is_logged_in', 'TRUE');
     }
   }
 }
