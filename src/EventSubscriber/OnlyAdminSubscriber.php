@@ -46,6 +46,7 @@ class OnlyAdminSubscriber implements EventSubscriberInterface {
     $allowed_routes = [
       'user.login',
       'user.reset',
+      'user.reset.form',
       'user.logout',
       'user.login.http',
       'user.login_status.http',
