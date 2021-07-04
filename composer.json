@@ -1,12 +1,15 @@
 {
-  "name": "batkor/only_admin",
-  "type": "drupal-custom-module",
-  "description": "Access only admin.",
-  "keywords": ["Drupal"],
-  "homepage": "https://gitlab.com/batkor-modules/only_admin",
-  "authors": [
-    {
-      "name": "batkor"
-    }
-  ]
+    "name": "batkor/only_admin",
+    "type": "drupal-module",
+    "description": "Access only admin.",
+    "keywords": [
+        "Drupal",
+        "Only admin"
+    ],
+    "homepage": "https://github.com/batkor/only_admin.git",
+    "authors": [
+        {
+            "name": "batkor"
+        }
+    ]
 }
