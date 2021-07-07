@@ -7,13 +7,16 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+/**
+ * The event subscriber for redirect anonymous users.
+ */
 class OnlyAdminSubscriber implements EventSubscriberInterface {
 
   /**
-   * The current account.
+   * The account proxy.
    *
    * @var \Drupal\Core\Session\AccountInterface
    */
@@ -26,6 +29,14 @@ class OnlyAdminSubscriber implements EventSubscriberInterface {
    */
   protected $currentRouteMatch;
 
+  /**
+   * OnlyAdminSubscriber constructor.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The account proxy.
+   * @param \Drupal\Core\Routing\CurrentRouteMatch $currentRouteMatch
+   *   The current route match.
+   */
   public function __construct(AccountInterface $account, CurrentRouteMatch $currentRouteMatch) {
     $this->account = $account;
     $this->currentRouteMatch = $currentRouteMatch;
@@ -34,10 +45,10 @@ class OnlyAdminSubscriber implements EventSubscriberInterface {
   /**
    * Kernel response event handler.
    *
-   * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   Response event.
    */
-  public function onKernelResponse(FilterResponseEvent $event) {
+  public function onKernelResponse(ResponseEvent $event) {
     // Skip if user authenticated.
     if ($this->account->isAuthenticated()) {
       return;
@@ -52,7 +63,7 @@ class OnlyAdminSubscriber implements EventSubscriberInterface {
       'user.login_status.http',
     ];
 
-    if (in_array($this->currentRouteMatch->getRouteName(), $allowed_routes)) {
+    if (\in_array($this->currentRouteMatch->getRouteName(), $allowed_routes)) {
       return;
     }
 
