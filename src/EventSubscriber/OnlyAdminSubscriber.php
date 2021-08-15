@@ -2,11 +2,13 @@
 
 namespace Drupal\only_admin\EventSubscriber;
 
+use Drupal\Core\Cache\CacheableRedirectResponse;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -17,17 +19,13 @@ class OnlyAdminSubscriber implements EventSubscriberInterface {
 
   /**
    * The account proxy.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
    */
-  protected $account;
+  protected AccountInterface $account;
 
   /**
    * The current route match.
-   *
-   * @var \Drupal\Core\Routing\CurrentRouteMatch
    */
-  protected $currentRouteMatch;
+  protected CurrentRouteMatch $currentRouteMatch;
 
   /**
    * OnlyAdminSubscriber constructor.
@@ -42,13 +40,7 @@ class OnlyAdminSubscriber implements EventSubscriberInterface {
     $this->currentRouteMatch = $currentRouteMatch;
   }
 
-  /**
-   * Kernel response event handler.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
-   *   Response event.
-   */
-  public function onKernelResponse(ResponseEvent $event) {
+  public function onKernelRequest(RequestEvent $event): void {
     // Skip if user authenticated.
     if ($this->account->isAuthenticated()) {
       return;
@@ -57,6 +49,7 @@ class OnlyAdminSubscriber implements EventSubscriberInterface {
     $allowed_routes = [
       'user.login',
       'user.reset',
+      'user.reset.login',
       'user.reset.form',
       'user.logout',
       'user.login.http',
@@ -66,16 +59,15 @@ class OnlyAdminSubscriber implements EventSubscriberInterface {
     if (\in_array($this->currentRouteMatch->getRouteName(), $allowed_routes)) {
       return;
     }
-
-    $event->setResponse(new RedirectResponse(Url::fromRoute('user.login')->toString()));
+    $event->setResponse(new CacheableRedirectResponse(Url::fromRoute('user.login')->toString()));
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
-      KernelEvents::RESPONSE => ['onKernelResponse'],
+      KernelEvents::REQUEST => ['onKernelRequest'],
     ];
   }
 
