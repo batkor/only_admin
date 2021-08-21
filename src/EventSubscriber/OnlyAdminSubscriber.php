@@ -59,7 +59,10 @@ class OnlyAdminSubscriber implements EventSubscriberInterface {
     if (\in_array($this->currentRouteMatch->getRouteName(), $allowed_routes)) {
       return;
     }
-    $event->setResponse(new CacheableRedirectResponse(Url::fromRoute('user.login')->toString()));
+    $response = new CacheableRedirectResponse(Url::fromRoute('user.login')->toString());
+    $response->getCacheableMetadata()
+      ->addCacheContexts(['user.roles:anonymous']);
+    $event->setResponse($response);
   }
 
   /**
