@@ -4,9 +4,6 @@ namespace Drupal\Tests\only_admin\Kernel;
 
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\UiHelperTrait;
-use Drupal\Tests\user\Traits\UserCreationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
